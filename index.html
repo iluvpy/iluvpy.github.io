@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mio ama didi</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Single+Day&display=swap" rel="stylesheet">
@@ -44,10 +43,9 @@
     <script>
 
         class Emoji {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
+            constructor(element) {
                 this.created = Date.now();
+                this.element = element;
             }
         }
         
@@ -56,30 +54,43 @@
             return new Promise(resolve => sleepSetTimeout_ctrl = setTimeout(resolve, ms));
         }
 
-        var mousex;
-        var mousey;
         var lastAdd = Date.now();
-        var emojis = [];
-        window.addEventListener("mousemove", (event) => {
+        var emojis = new Array();
+        
+        window.addEventListener("mousemove", mousemove, true);
+        
+        function mousemove(event) {
             var now = Date.now();
-            if (now - lastAdd > 200) {
+            if (now - lastAdd > 30) {
                 const new_emoji = document.createElement("h4", )
                 var t = document.createTextNode("💕");
                 new_emoji.appendChild(t);
-                emojis.push(new_emoji);
+                new_emoji.style.position = "absolute";
+                new_emoji.style.left = event.clientX + "px";
+                new_emoji.style.top = event.clientY + "px";
+                document.body.appendChild(new_emoji);
+                var emoji = new Emoji(new_emoji);
+                emojis.push(emoji);
+                lastAdd = Date.now();
             }
-        });
-
-        while (true) {
-            await sleep(50);
-            emojis = emojis.filter(e => {return e.created - Date.now < 300 });
         }
+        
+        function loop() {        
+            emojis.forEach(e => {
+                if (Date.now() - e.created > 300) { 
+                    e.element.remove();
+                }
+            })
+            emojis = emojis.filter(e => {return Date.now() - e.created < 3000;});
+            setTimeout(loop, 50);
+        };
+        loop();
 
     </script>
 </head>
 <body>
     <div class="main-text single-day-regular">
-        Mio ama Didi tanto tanto💕
+        Mio ama Didi💕
     </div>
 </body>
 </html>
