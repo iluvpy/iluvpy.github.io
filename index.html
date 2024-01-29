@@ -95,6 +95,9 @@
                     e.element.style.opacity = parseFloat(e.element.style.opacity) - 0.02;
                 }
                 e.element.style.top = parseInt(e.element.style.top) + 1 + "px";
+                if (parseFloat(e.element.style.opacity) <= 0.0) {
+                    e.element.remove();
+                }
             })
             emojis = emojis.filter(e => {return parseFloat(e.element.style.opacity) >= 0.0});
             setTimeout(loop, 20);
