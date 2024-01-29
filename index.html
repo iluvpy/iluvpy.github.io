@@ -48,28 +48,42 @@
                 this.element = element;
             }
         }
-        
-        function sleep(ms) {
-            clearInterval(sleepSetTimeout_ctrl);
-            return new Promise(resolve => sleepSetTimeout_ctrl = setTimeout(resolve, ms));
+
+
+        function randInt(min, max) {
+            return parseInt(Math.random() * (max - min) + min);
         }
 
         var lastAdd = Date.now();
+        var heart_emojis = ["💗",
+                            "💓",
+                            "💕",
+                            "🩷",
+                            "🧡",
+                            "💛",
+                            "💚",
+                            "💙",
+                            "🩵",
+                            "💜"];
         var emojis = new Array();
+        var emojis_per_second = 50;
         
         window.addEventListener("mousemove", mousemove, true);
-        
         function mousemove(event) {
             var now = Date.now();
-            if (now - lastAdd > 30) {
+            if (now - lastAdd > 1000/emojis_per_second) {
                 const new_emoji = document.createElement("h4", )
-                var t = document.createTextNode("💕");
+                let t = document.createTextNode(heart_emojis[randInt(0, heart_emojis.length - 1)]);
                 new_emoji.appendChild(t);
                 new_emoji.style.position = "absolute";
-                new_emoji.style.left = event.clientX + "px";
-                new_emoji.style.top = event.clientY + "px";
+                let random_x = randInt(-25, 25);
+                let random_y = randInt(-25, 25);
+                new_emoji.style.left = event.clientX + random_x + "px";
+                new_emoji.style.top = event.clientY + random_y + "px";
+                new_emoji.style.opacity = "1.0";
+
                 document.body.appendChild(new_emoji);
-                var emoji = new Emoji(new_emoji);
+                let emoji = new Emoji(new_emoji);
                 emojis.push(emoji);
                 lastAdd = Date.now();
             }
@@ -77,12 +91,13 @@
         
         function loop() {        
             emojis.forEach(e => {
-                if (Date.now() - e.created > 300) { 
-                    e.element.remove();
+                if (Date.now() - e.created > 50) { 
+                    e.element.style.opacity = parseFloat(e.element.style.opacity) - 0.02;
                 }
+                e.element.style.top = parseInt(e.element.style.top) + 1 + "px";
             })
-            emojis = emojis.filter(e => {return Date.now() - e.created < 3000;});
-            setTimeout(loop, 50);
+            emojis = emojis.filter(e => {return parseFloat(e.element.style.opacity) >= 0.0});
+            setTimeout(loop, 20);
         };
         loop();
 
