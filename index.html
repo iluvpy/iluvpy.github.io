@@ -40,6 +40,42 @@
             font-style: normal;
           }
     </style>
+
+    <script>
+
+        class Emoji {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.created = Date.now();
+            }
+        }
+        
+        function sleep(ms) {
+            clearInterval(sleepSetTimeout_ctrl);
+            return new Promise(resolve => sleepSetTimeout_ctrl = setTimeout(resolve, ms));
+        }
+
+        var mousex;
+        var mousey;
+        var lastAdd = Date.now();
+        var emojis = [];
+        window.addEventListener("mousemove", (event) => {
+            var now = Date.now();
+            if (now - lastAdd > 200) {
+                const new_emoji = document.createElement("h4", )
+                var t = document.createTextNode("💕");
+                new_emoji.appendChild(t);
+                emojis.push(new_emoji);
+            }
+        });
+
+        while (true) {
+            await sleep(50);
+            emojis = emojis.filter(e => {return e.created - Date.now < 300 });
+        }
+
+    </script>
 </head>
 <body>
     <div class="main-text single-day-regular">
